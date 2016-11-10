@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">AmMobileCatalog</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_cart">Cart</string>
+    
+    <string name="menu_catalog">Catalog</string>
+    <string name="menu_sets">Sets</string>
+    <string name="menu_promos">Promos</string>
+    <string name="menu_stores">Stores</string>
+    <string name="menu_profile">Profile</string>
+
+    <string name="logo_amwine">AM Wine</string>
+    <string name="logo_description">Wine Supermarkets</string>
+</resources>

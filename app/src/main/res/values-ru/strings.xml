@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Ароматный Мир</string>
+
+    <string name="action_cart">Корзина</string>
+    
+    <string name="menu_catalog">Каталог</string>
+    <string name="menu_sets">Сеты</string>
+    <string name="menu_promos">Акции</string>
+    <string name="menu_stores">Магазины</string>
+    <string name="menu_profile">Профиль</string>
+
+    <string name="logo_amwine">Ароматный Мир</string>
+    <string name="logo_description">Винные супермаркеты</string>
+</resources>
