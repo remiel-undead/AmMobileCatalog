@@ -49,6 +49,9 @@ public class LoginPresenterImpl implements LoginPresenter {
 
     @Subscribe
     public void onLoginPerformed(LoginPerformedEvent loginPerformedEvent) {
+        ///
+        loginView.showErrorMessage("THIS IS NOT AN ERROR");
+        ///
         loginView.finishSplash();
     }
 

@@ -14,4 +14,9 @@
 
     <string name="logo_amwine">AM Wine</string>
     <string name="logo_description">Wine Supermarkets</string>
+
+    <string name="sorry_empty">Sorry, it\'s empty yet.</string>
+    <string name="sorry_empty_catalog">Sorry, Catalog is empty yet.</string>
+    <string name="sorry_empty_tematic_sets">Sorry, Tematic Sets are empty yet.</string>
+    <string name="sorry_empty_home">Sorry, Home Page is empty yet.</string>
 </resources>
