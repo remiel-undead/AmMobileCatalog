@@ -23,4 +23,12 @@ public class OrmSection extends SugarRecord {
                 CacheDataSource.FIELD_SECTION + CacheDataSource.SYMBOL_EQUALITY_QUESTION,
                 Integer.toString(sectionID));
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getSectionID() {
+        return sectionID;
+    }
 }

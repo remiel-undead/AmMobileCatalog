@@ -1,5 +1,12 @@
 package com.example.undead.ammobilecatalog.repository;
 
+import com.example.undead.ammobilecatalog.bus.BusProvider;
+import com.example.undead.ammobilecatalog.bus.FetchSectionsEvent;
+import com.example.undead.ammobilecatalog.bus.FetchSectionsPerformedEvent;
+import com.example.undead.ammobilecatalog.bus.FetchSubsectionItemsEvent;
+import com.example.undead.ammobilecatalog.bus.FetchSubsectionItemsPerformedEvent;
+import com.example.undead.ammobilecatalog.bus.FetchSubsectionsEvent;
+import com.example.undead.ammobilecatalog.bus.FetchSubsectionsPerformedEvent;
 import com.example.undead.ammobilecatalog.bus.LoginPerformedEvent;
 import com.example.undead.ammobilecatalog.model.Section;
 import com.example.undead.ammobilecatalog.model.Subsection;
@@ -38,14 +45,12 @@ public class CatalogRepository implements DataStorage {
 
     @Override
     public List<OrmSubsection> getSubsections(int sectionId) {
-        // TODO get subsection for section from cache
-        return null;
+        return mCacheDataSource.getSubsections(sectionId);
     }
 
     @Override
     public List<OrmSubsectionItem> getSubsectionItems(int sectionId) {
-        // TODO get items for subsection from cache
-        return null;
+        return mCacheDataSource.getSubsectionItems(sectionId);
     }
 
     @Subscribe
@@ -66,4 +71,18 @@ public class CatalogRepository implements DataStorage {
         mCacheDataSource.updateTematicSets(MappingUtils.convertIntoOrmTematicSets(loginPerformedEvent.catalog.getTematicSets()));
     }
 
+    @Subscribe
+    public void onFetchSectionsEvent(FetchSectionsEvent fetchSectionsEvent) {
+        BusProvider.getInstance().post(new FetchSectionsPerformedEvent(getSections()));
+    }
+
+    @Subscribe
+    public void onFetchSubsectionsEvent(FetchSubsectionsEvent fetchSubsectionsEvent) {
+        BusProvider.getInstance().post(new FetchSubsectionsPerformedEvent(getSubsections(fetchSubsectionsEvent.sectionID)));
+    }
+
+    @Subscribe
+    public void onFetchSubsectionItemssEvent(FetchSubsectionItemsEvent fetchSubsectionItemsEvent) {
+        BusProvider.getInstance().post(new FetchSubsectionItemsPerformedEvent(getSubsectionItems(fetchSubsectionItemsEvent.sectionID)));
+    }
 }

@@ -18,4 +18,8 @@ public class OrmSubsectionItem extends SugarRecord {
         this.name = name;
         this.subsection = subsection;
     }
+
+    public String getName() {
+        return name;
+    }
 }

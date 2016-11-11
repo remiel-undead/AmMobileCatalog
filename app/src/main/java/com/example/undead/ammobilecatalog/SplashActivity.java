@@ -24,6 +24,7 @@ public class SplashActivity extends AppCompatActivity implements LoginView {
     @Override
     public void showErrorMessage(String errorMsg) {
         Toast.makeText(SplashActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+        finishSplash();
     }
 
     @Override
