@@ -3,12 +3,14 @@ package com.example.undead.ammobilecatalog.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 public class Section implements Parcelable {
     private int sectionID;
     private String name;
-    private Subsection[] subsections;
+    private List<Subsection> subsections;
 
-    public Section(int sectionID, String name, Subsection[] subsections) {
+    public Section(int sectionID, String name, List<Subsection> subsections) {
         this.sectionID = sectionID;
         this.name = name;
         this.subsections = subsections;
@@ -17,7 +19,7 @@ public class Section implements Parcelable {
     protected Section(Parcel in) {
         sectionID = in.readInt();
         name = in.readString();
-        subsections = in.createTypedArray(Subsection.CREATOR);
+        subsections = in.createTypedArrayList(Subsection.CREATOR);
     }
 
     public static final Creator<Section> CREATOR = new Creator<Section>() {
@@ -48,11 +50,11 @@ public class Section implements Parcelable {
         this.name = name;
     }
 
-    public Subsection[] getSubsections() {
+    public List<Subsection> getSubsections() {
         return subsections;
     }
 
-    public void setSubsections(Subsection[] subsections) {
+    public void setSubsections(List<Subsection> subsections) {
         this.subsections = subsections;
     }
 
@@ -65,6 +67,6 @@ public class Section implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(sectionID);
         dest.writeString(name);
-        dest.writeTypedArray(subsections, flags);
+        dest.writeTypedList(subsections);
     }
 }
