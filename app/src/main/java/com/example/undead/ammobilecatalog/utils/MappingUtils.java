@@ -28,7 +28,7 @@ public class MappingUtils {
     }
 
     public static OrmSubsection convertIntoOrmSubsection(Subsection subsection, Section section) {
-        return new OrmSubsection(subsection.getSectionID(), subsection.getName(), convertIntoOrmSection(section));
+        return new OrmSubsection(subsection.getSectionID(), subsection.getName(), convertIntoOrmSection(section).getSectionID());
     }
 
     public static List<OrmTematicSet> convertIntoOrmTematicSets(List<TematicSet> tematicSets) {
@@ -52,7 +52,7 @@ public class MappingUtils {
             for (Subsection subsection : subsections) {
                 ormList.add(new OrmSubsection(subsection.getSectionID(),
                         subsection.getName(),
-                        MappingUtils.convertIntoOrmSection(section)));
+                        MappingUtils.convertIntoOrmSection(section).getSectionID()));
             }
         }
         return ormList;
@@ -65,7 +65,7 @@ public class MappingUtils {
             for (SubsectionItem subsectionItem : subsectionItems) {
                 ormList.add(new OrmSubsectionItem(subsectionItem.getItemID(),
                         subsection.getName(),
-                        MappingUtils.convertIntoOrmSubsection(subsection, section)));
+                        MappingUtils.convertIntoOrmSubsection(subsection, section).getSectionID()));
             }
         }
         return ormList;

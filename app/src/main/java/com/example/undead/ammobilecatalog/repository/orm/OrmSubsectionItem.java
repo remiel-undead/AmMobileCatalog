@@ -9,11 +9,11 @@ public class OrmSubsectionItem extends SugarRecord {
     String name;
 
     // defining a relationship
-    OrmSubsection subsection;
+    int subsection;
 
     public OrmSubsectionItem() {}
 
-    public OrmSubsectionItem(int itemID, String name, OrmSubsection subsection) {
+    public OrmSubsectionItem(int itemID, String name, int subsection) {
         this.itemID = itemID;
         this.name = name;
         this.subsection = subsection;
