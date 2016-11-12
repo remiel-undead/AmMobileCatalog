@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.frame_container, new HomeFragment()).commit();
+        fragmentManager.beginTransaction().replace(R.id.frame_container, HomeFragment.newInstance()).commit();
 
         if (savedInstanceState != null) {
             mDrawerItemId = savedInstanceState.getInt(STATE_DRAWER, 0);
@@ -86,17 +86,17 @@ public class MainActivity extends AppCompatActivity
         mDrawerItemId = item.getItemId();
         Fragment fragment = null;
         if (id == R.id.nav_catalog) {
-            fragment = new CatalogFragment();
+            fragment = CatalogFragment.newInstance();
         } else if (id == R.id.nav_sets) {
-            fragment = new TematicSetsFragment();
+            fragment = TematicSetsFragment.newInstance();
         } else if (id == R.id.nav_promos) {
-            fragment = new BlankFragment();
+            fragment = BlankFragment.newInstance();
         } else if (id == R.id.nav_stores) {
-            fragment = new BlankFragment();
+            fragment = BlankFragment.newInstance();
         } else if (id == R.id.nav_profile) {
-            fragment = new BlankFragment();
+            fragment = BlankFragment.newInstance();
         } else {
-            fragment = new HomeFragment();
+            fragment = HomeFragment.newInstance();
         }
 
         if (fragment != null) {

@@ -49,6 +49,10 @@ public class CatalogFragment extends Fragment implements CatalogView {
     public CatalogFragment() {
     }
 
+    public static CatalogFragment newInstance() {
+        return new CatalogFragment();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

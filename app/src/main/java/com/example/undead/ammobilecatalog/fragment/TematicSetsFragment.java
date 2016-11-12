@@ -11,6 +11,10 @@ import com.example.undead.ammobilecatalog.R;
 public class TematicSetsFragment extends Fragment {
     public TematicSetsFragment() {}
 
+    public static TematicSetsFragment newInstance() {
+        return new TematicSetsFragment();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

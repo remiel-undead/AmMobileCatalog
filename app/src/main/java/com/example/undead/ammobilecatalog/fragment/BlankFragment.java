@@ -11,6 +11,10 @@ import com.example.undead.ammobilecatalog.R;
 public class BlankFragment extends Fragment {
     public BlankFragment() {}
 
+    public static BlankFragment newInstance() {
+        return new BlankFragment();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
