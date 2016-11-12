@@ -10,6 +10,8 @@ import com.example.undead.ammobilecatalog.bus.FetchSubsectionItemsEvent;
 import com.example.undead.ammobilecatalog.bus.FetchSubsectionItemsPerformedEvent;
 import com.example.undead.ammobilecatalog.bus.FetchSubsectionsEvent;
 import com.example.undead.ammobilecatalog.bus.FetchSubsectionsPerformedEvent;
+import com.example.undead.ammobilecatalog.bus.FetchTematicSetsEvent;
+import com.example.undead.ammobilecatalog.bus.FetchTematicSetsPerformedEvent;
 import com.example.undead.ammobilecatalog.bus.LoginPerformedEvent;
 import com.example.undead.ammobilecatalog.model.Section;
 import com.example.undead.ammobilecatalog.model.Subsection;
@@ -128,4 +130,21 @@ public class CatalogRepository implements DataStorage {
             }
         }).start();
     }
+
+    @Subscribe
+    public void onFetchTematicSetsEvent(FetchTematicSetsEvent fetchTematicSetsEvent) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final List<OrmTematicSet> ormTematicSets = getTematicSets();
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        BusProvider.getInstance().post(new FetchTematicSetsPerformedEvent(ormTematicSets));
+                    }
+                });
+            }
+        }).start();
+    }
+
 }

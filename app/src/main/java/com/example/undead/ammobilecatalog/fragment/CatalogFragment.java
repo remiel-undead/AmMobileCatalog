@@ -21,6 +21,7 @@ import com.example.undead.ammobilecatalog.repository.orm.OrmSection;
 import com.example.undead.ammobilecatalog.repository.orm.OrmSubsection;
 import com.example.undead.ammobilecatalog.repository.orm.OrmSubsectionItem;
 import com.example.undead.ammobilecatalog.utils.ObjectUtils;
+import com.example.undead.ammobilecatalog.view_interfaces.BaseView;
 import com.example.undead.ammobilecatalog.view_interfaces.CatalogView;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class CatalogFragment extends Fragment implements CatalogView {
+public class CatalogFragment extends Fragment implements BaseView, CatalogView {
     public static final String FRAGMENT_TAG_CATALOG = "CatalogFragment";
     public static final int LEVEL_SECTION = 0;
     public static final int LEVEL_SUBSECTION = 1;
