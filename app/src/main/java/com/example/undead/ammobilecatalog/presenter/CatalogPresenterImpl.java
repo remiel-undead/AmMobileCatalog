@@ -7,6 +7,7 @@ import com.example.undead.ammobilecatalog.bus.FetchSubsectionItemsEvent;
 import com.example.undead.ammobilecatalog.bus.FetchSubsectionItemsPerformedEvent;
 import com.example.undead.ammobilecatalog.bus.FetchSubsectionsEvent;
 import com.example.undead.ammobilecatalog.bus.FetchSubsectionsPerformedEvent;
+import com.example.undead.ammobilecatalog.fragment.CatalogFragment;
 import com.example.undead.ammobilecatalog.view_interfaces.CatalogView;
 import com.squareup.otto.Subscribe;
 
@@ -30,6 +31,21 @@ public class CatalogPresenterImpl implements CatalogPresenter {
     @Override
     public void fetchSubsectionItems(int sectionId) {
         BusProvider.getInstance().post(new FetchSubsectionItemsEvent(sectionId));
+    }
+
+    @Override
+    public void fetch(int level, int currentSectionId, int currentSubsectionId) {
+        switch (level) {
+            case CatalogFragment.LEVEL_SECTION:
+                fetchSections();
+                break;
+            case CatalogFragment.LEVEL_SUBSECTION:
+                fetchSubsections(currentSectionId);
+                break;
+            case CatalogFragment.LEVEL_SUBSECTION_ITEM:
+                fetchSubsectionItems(currentSubsectionId);
+                break;
+        }
     }
 
     @Subscribe

@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity
 
     private int mDrawerItemId = 0;
 
+    private Fragment mCatalogFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,18 +42,19 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.frame_container, HomeFragment.newInstance()).commit();
-
         if (savedInstanceState != null) {
             mDrawerItemId = savedInstanceState.getInt(STATE_DRAWER, 0);
             onNavigationItemSelected(navigationView.getMenu().findItem(mDrawerItemId));
+        } else {
+            mDrawerItemId = 0;
+            fragmentManager.beginTransaction().replace(R.id.frame_container, HomeFragment.newInstance()).commit();
         }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(STATE_DRAWER, mDrawerItemId);
         super.onSaveInstanceState(outState);
+        outState.putInt(STATE_DRAWER, mDrawerItemId);
     }
 
     @Override
@@ -60,7 +63,11 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if (mCatalogFragment != null && mCatalogFragment.isVisible()) {
+                ((CatalogFragment) mCatalogFragment).onBackPressed();
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -84,24 +91,24 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         mDrawerItemId = item.getItemId();
-        Fragment fragment = null;
+        FragmentManager fragmentManager = getSupportFragmentManager();
         if (id == R.id.nav_catalog) {
-            fragment = CatalogFragment.newInstance();
+            mCatalogFragment = fragmentManager.findFragmentByTag(CatalogFragment.FRAGMENT_TAG_CATALOG);
+            if (mCatalogFragment == null) {
+                mCatalogFragment = CatalogFragment.newInstance();
+            }
+            fragmentManager.beginTransaction().replace(R.id.frame_container, mCatalogFragment,
+                    CatalogFragment.FRAGMENT_TAG_CATALOG).commit();
         } else if (id == R.id.nav_sets) {
-            fragment = TematicSetsFragment.newInstance();
+            fragmentManager.beginTransaction().replace(R.id.frame_container, TematicSetsFragment.newInstance()).commit();
         } else if (id == R.id.nav_promos) {
-            fragment = BlankFragment.newInstance();
+            fragmentManager.beginTransaction().replace(R.id.frame_container, BlankFragment.newInstance()).commit();
         } else if (id == R.id.nav_stores) {
-            fragment = BlankFragment.newInstance();
+            fragmentManager.beginTransaction().replace(R.id.frame_container, BlankFragment.newInstance()).commit();
         } else if (id == R.id.nav_profile) {
-            fragment = BlankFragment.newInstance();
+            fragmentManager.beginTransaction().replace(R.id.frame_container, BlankFragment.newInstance()).commit();
         } else {
-            fragment = HomeFragment.newInstance();
-        }
-
-        if (fragment != null) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.frame_container, HomeFragment.newInstance()).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

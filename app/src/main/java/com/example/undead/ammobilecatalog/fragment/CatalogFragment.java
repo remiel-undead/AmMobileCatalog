@@ -1,6 +1,7 @@
 package com.example.undead.ammobilecatalog.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.example.undead.ammobilecatalog.presenter.CatalogPresenterImpl;
 import com.example.undead.ammobilecatalog.repository.orm.OrmSection;
 import com.example.undead.ammobilecatalog.repository.orm.OrmSubsection;
 import com.example.undead.ammobilecatalog.repository.orm.OrmSubsectionItem;
+import com.example.undead.ammobilecatalog.utils.ObjectUtils;
 import com.example.undead.ammobilecatalog.view_interfaces.CatalogView;
 
 import java.util.ArrayList;
@@ -29,6 +31,15 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class CatalogFragment extends Fragment implements CatalogView {
+    public static final String FRAGMENT_TAG_CATALOG = "CatalogFragment";
+    public static final int LEVEL_SECTION = 0;
+    public static final int LEVEL_SUBSECTION = 1;
+    public static final int LEVEL_SUBSECTION_ITEM = 2;
+
+    private static final String TAG_LEVEL = "level";
+    private static final String TAG_CURRENT_SEC_ID = "current_sec_id";
+    private static final String TAG_CURRENT_SUBSEC_ID = "current_subsec_id";
+
     @BindView(R.id.emptyTextView)
     TextView emptyTextView;
     @BindView(R.id.progressBar)
@@ -45,6 +56,9 @@ public class CatalogFragment extends Fragment implements CatalogView {
     private CatalogAdapter catalogAdapter;
     private CatalogPresenter catalogPresenter;
     private boolean isCatalogRequested;
+    private int currentLevel;
+    private int currentSectionId;
+    private int currentSubsectionId;
 
     public CatalogFragment() {
     }
@@ -56,8 +70,30 @@ public class CatalogFragment extends Fragment implements CatalogView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         catalogPresenter = new CatalogPresenterImpl(this);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        currentLevel = 0;
+        currentSectionId = -1;
+        currentSubsectionId = -1;
         isCatalogRequested = false;
+        if (savedInstanceState != null) {
+            currentLevel = savedInstanceState.getInt(TAG_LEVEL, 0);
+            currentSectionId = savedInstanceState.getInt(TAG_CURRENT_SEC_ID, -1);
+            currentSubsectionId = savedInstanceState.getInt(TAG_CURRENT_SUBSEC_ID, -1);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(TAG_LEVEL, currentLevel);
+        outState.putInt(TAG_CURRENT_SEC_ID, currentSectionId);
+        outState.putInt(TAG_CURRENT_SUBSEC_ID, currentSubsectionId);
     }
 
     @Override
@@ -92,6 +128,11 @@ public class CatalogFragment extends Fragment implements CatalogView {
     @Override
     public void showEmptyMessage() {
         catalogListView.setVisibility(View.GONE);
+        if (currentLevel > 0) {
+            emptyTextView.setText(getString(R.string.sorry_empty));
+        } else {
+            emptyTextView.setText(getString(R.string.sorry_empty_catalog));
+        }
         emptyTextView.setVisibility(View.VISIBLE);
     }
 
@@ -100,10 +141,15 @@ public class CatalogFragment extends Fragment implements CatalogView {
         sectionList = sections;
         hideProgress();
         catalogAdapter.refreshCatalogList(new ArrayList<Object>(sectionList));
+        if (ObjectUtils.isEmpty(sectionList)) {
+            showEmptyMessage();
+        }
         catalogListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 showProgress();
+                currentSectionId = sectionList.get(position).getSectionID();
+                currentLevel = 1;
                 catalogPresenter.fetchSubsections(sectionList.get(position).getSectionID());
             }
         });
@@ -114,10 +160,15 @@ public class CatalogFragment extends Fragment implements CatalogView {
         subsectionList = subsections;
         hideProgress();
         catalogAdapter.refreshCatalogList(new ArrayList<Object>(subsectionList));
+        if (ObjectUtils.isEmpty(subsectionList)) {
+            showEmptyMessage();
+        }
         catalogListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 showProgress();
+                currentSubsectionId = sectionList.get(position).getSectionID();
+                currentLevel = 2;
                 catalogPresenter.fetchSubsectionItems(subsectionList.get(position).getSectionID());
             }
         });
@@ -128,6 +179,9 @@ public class CatalogFragment extends Fragment implements CatalogView {
         subsectionItemList = subsectionItems;
         hideProgress();
         catalogAdapter.refreshCatalogList(new ArrayList<Object>(subsectionItemList));
+        if (ObjectUtils.isEmpty(subsectionItemList)) {
+            showEmptyMessage();
+        }
         catalogListView.setOnItemClickListener(null);
     }
 
@@ -143,7 +197,7 @@ public class CatalogFragment extends Fragment implements CatalogView {
         BusProvider.getInstance().register(catalogPresenter);
         if (!isCatalogRequested) {
             showProgress();
-            catalogPresenter.fetchSections();
+            catalogPresenter.fetch(currentLevel, currentSectionId, currentSubsectionId);
             isCatalogRequested = true;
         }
     }
@@ -152,5 +206,16 @@ public class CatalogFragment extends Fragment implements CatalogView {
     public void onPause() {
         super.onPause();
         BusProvider.getInstance().unregister(catalogPresenter);
+    }
+
+    public void onBackPressed() {
+        showProgress();
+        if (currentLevel > 0) {
+            --currentLevel;
+            catalogPresenter.fetch(currentLevel, currentSectionId, currentSubsectionId);
+        } else {
+            hideProgress();
+            getActivity().finish();
+        }
     }
 }
