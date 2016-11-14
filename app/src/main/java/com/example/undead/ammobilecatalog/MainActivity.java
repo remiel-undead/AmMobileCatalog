@@ -44,10 +44,13 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (savedInstanceState != null) {
             mDrawerItemId = savedInstanceState.getInt(STATE_DRAWER, 0);
-            onNavigationItemSelected(navigationView.getMenu().findItem(mDrawerItemId));
         } else {
             mDrawerItemId = 0;
+        }
+        if (mDrawerItemId == 0) {
             fragmentManager.beginTransaction().replace(R.id.frame_container, HomeFragment.newInstance()).commit();
+        } else {
+            onNavigationItemSelected(navigationView.getMenu().findItem(mDrawerItemId));
         }
     }
 
