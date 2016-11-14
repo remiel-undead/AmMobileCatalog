@@ -59,12 +59,14 @@ public class CatalogAdapter extends BaseAdapter {
         }
 
         Object item = catalogList.get(position);
+        holder.nameTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.arrow_right, 0);
         if (item instanceof OrmSection) {
             holder.nameTextView.setText(((OrmSection) item).getName());
         } else if (item instanceof OrmSubsection) {
             holder.nameTextView.setText(((OrmSubsection) item).getName());
         } else if (item instanceof OrmSubsectionItem) {
             holder.nameTextView.setText(((OrmSubsectionItem) item).getName());
+            holder.nameTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
 
         return convertView;
