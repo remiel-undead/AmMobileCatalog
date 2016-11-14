@@ -28,6 +28,7 @@ public class CatalogFragment extends BaseFragment implements CatalogView {
     public static final int LEVEL_SECTION = 0;
     public static final int LEVEL_SUBSECTION = 1;
     public static final int LEVEL_SUBSECTION_ITEM = 2;
+    public static final int DEFAULT_SEC_ID = -1;
 
     private static final String TAG_LEVEL = "level";
     private static final String TAG_CURRENT_SEC_ID = "current_sec_id";
@@ -60,14 +61,12 @@ public class CatalogFragment extends BaseFragment implements CatalogView {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        currentLevel = 0;
-        currentSectionId = -1;
-        currentSubsectionId = -1;
+        setCurrentLevelValues(LEVEL_SECTION, DEFAULT_SEC_ID, DEFAULT_SEC_ID);
         mIsListRequested = false;
         if (savedInstanceState != null) {
-            currentLevel = savedInstanceState.getInt(TAG_LEVEL, 0);
-            currentSectionId = savedInstanceState.getInt(TAG_CURRENT_SEC_ID, -1);
-            currentSubsectionId = savedInstanceState.getInt(TAG_CURRENT_SUBSEC_ID, -1);
+            setCurrentLevelValues(savedInstanceState.getInt(TAG_LEVEL, LEVEL_SECTION),
+                    savedInstanceState.getInt(TAG_CURRENT_SEC_ID, DEFAULT_SEC_ID),
+                    savedInstanceState.getInt(TAG_CURRENT_SUBSEC_ID, DEFAULT_SEC_ID));
         }
     }
 
@@ -111,8 +110,8 @@ public class CatalogFragment extends BaseFragment implements CatalogView {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 showProgress();
                 currentSectionId = sectionList.get(position).getSectionID();
-                currentLevel = 1;
-                catalogPresenter.fetchSubsections(sectionList.get(position).getSectionID());
+                setCurrentLevelValues(LEVEL_SUBSECTION, currentSectionId, DEFAULT_SEC_ID);
+                catalogPresenter.fetchSubsections(currentSectionId);
             }
         });
     }
@@ -129,9 +128,9 @@ public class CatalogFragment extends BaseFragment implements CatalogView {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 showProgress();
-                currentSubsectionId = sectionList.get(position).getSectionID();
-                currentLevel = 2;
-                catalogPresenter.fetchSubsectionItems(subsectionList.get(position).getSectionID());
+                currentSubsectionId = subsectionList.get(position).getSectionID();
+                setCurrentLevelValues(LEVEL_SUBSECTION_ITEM, currentSectionId, currentSubsectionId);
+                catalogPresenter.fetchSubsectionItems(currentSubsectionId);
             }
         });
     }
@@ -166,12 +165,35 @@ public class CatalogFragment extends BaseFragment implements CatalogView {
 
     public void onBackPressed() {
         showProgress();
-        if (currentLevel > 0) {
+        if (currentLevel > LEVEL_SECTION) {
             --currentLevel;
             catalogPresenter.fetch(currentLevel, currentSectionId, currentSubsectionId);
         } else {
             hideProgress();
             getActivity().finish();
+        }
+    }
+
+    private void setCurrentLevelValues(int cL, int cS, int cSs) {
+        currentLevel = cL;
+        switch (currentLevel) {
+            case LEVEL_SECTION:
+                currentSectionId = DEFAULT_SEC_ID;
+                currentSubsectionId = DEFAULT_SEC_ID;
+                break;
+            case LEVEL_SUBSECTION:
+                currentSectionId = cS;
+                currentSubsectionId = DEFAULT_SEC_ID;
+                break;
+            case LEVEL_SUBSECTION_ITEM:
+                currentSectionId = cS;
+                currentSubsectionId = cSs;
+                break;
+            default:
+                currentLevel = LEVEL_SECTION;
+                currentSectionId = DEFAULT_SEC_ID;
+                currentSubsectionId = DEFAULT_SEC_ID;
+                break;
         }
     }
 }
