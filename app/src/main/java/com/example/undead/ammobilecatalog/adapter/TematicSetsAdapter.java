@@ -60,7 +60,7 @@ public class TematicSetsAdapter extends BaseAdapter {
 
         OrmTematicSet item = tematicSetList.get(position);
         holder.descriptionTextView.setText(item.getDescription());
-        Picasso.with(context).load(item.getImg()).placeholder(R.drawable.side_nav_bar).into(holder.imageView);
+        Picasso.with(context).load(item.getImg()).fit().placeholder(R.drawable.side_nav_bar).into(holder.imageView);
 
         return convertView;
     }
