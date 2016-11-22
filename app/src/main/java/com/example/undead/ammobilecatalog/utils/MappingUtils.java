@@ -64,7 +64,7 @@ public class MappingUtils {
         if (!ObjectUtils.isEmpty(subsectionItems)) {
             for (SubsectionItem subsectionItem : subsectionItems) {
                 ormList.add(new OrmSubsectionItem(subsectionItem.getItemID(),
-                        subsection.getName(),
+                        subsectionItem.getName(),
                         MappingUtils.convertIntoOrmSubsection(subsection, section).getSectionID()));
             }
         }
